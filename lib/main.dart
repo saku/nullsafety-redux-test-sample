@@ -1,10 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:sample/app_state.dart';
+import 'package:redux/redux.dart';
+import 'package:sample/app_state_reducer.dart';
+import 'package:sample/count_repository.dart';
+import 'package:sample/counter_middleware.dart';
+
+final Store<AppState> store = Store<AppState>(
+  appStateReducer,
+  initialState: const AppState(),
+  middleware: [
+    ...counterMiddleware(CountRepository()),
+  ],
+);
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StoreProvider(store: store, child: App());
+  }
+}
+
+class App extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
